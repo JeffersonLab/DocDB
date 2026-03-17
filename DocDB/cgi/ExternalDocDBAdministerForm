@@ -66,14 +66,15 @@ my $PrivateURL = $Untaint -> extract(-as_safehtml => "privurl") || "";
 
 $query -> delete_all();
 
-if ($Password && $Username) {
-  CreateConnection(-user => $Username, -password => $Password);
-} else {
-  CreateConnection(-type => "ro");
-  if ($Action) {
-    push @ErrorStack,"You must supply the admin username and password to administer";
-  }
-}
+#if ($Password && $Username) {
+#  CreateConnection(-user => $Username, -password => $Password);
+#} else {
+#  CreateConnection(-type => "ro");
+#  if ($Action) {
+#    push @ErrorStack,"You must supply the admin username and password to administer";
+#  }
+#}
+CreateConnection(-type => "rw");
 
 GetSecurityGroups();
 

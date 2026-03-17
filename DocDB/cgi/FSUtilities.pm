@@ -158,7 +158,8 @@ sub ProtectDirectory { # Write (or delete) correct .htaccess file in directory
   }
 
   foreach $GroupID (keys %all_users) {
-    push @all_users,$SecurityGroups{$GroupID}{NAME}
+    #push @all_users,$SecurityGroups{$GroupID}{NAME}
+    push @all_users,$SecurityGroups{$GroupID}{LDAP_GROUP_REFERENCE}
   }
 
   my $AuthName = join ' or ',@users;

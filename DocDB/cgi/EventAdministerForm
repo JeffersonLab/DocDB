@@ -68,11 +68,12 @@ my $LongDescription = $Untaint -> extract(-as_safehtml => "longdesc") || "";
 
 $query -> delete_all();
 
-if ($Password && $Username) {
-  CreateConnection(-user => $Username, -password => $Password);
-} else {
-  CreateConnection(-type => "ro");
-}
+#if ($Password && $Username) {
+#  CreateConnection(-user => $Username, -password => $Password);
+#} else {
+#  CreateConnection(-type => "ro");
+#}
+CreateConnection(-type => "rw");
 
 EndPage(-startpage => $TRUE);
 

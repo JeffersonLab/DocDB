@@ -54,7 +54,8 @@ my $DocTypeID = $Untaint -> extract(-as_integer => "doctype") || 0;
 my $ShortName = $Untaint -> extract(-as_safehtml => "name") || "";
 my $LongName = $Untaint -> extract(-as_safehtml => "longdesc") || "";
 
-$dbh   = DBI->connect('DBI:mysql:'.$db_name.':'.$db_host,$Username,$Password);
+#$dbh   = DBI->connect('DBI:mysql:'.$db_name.':'.$db_host,$Username,$Password);
+CreateConnection(-type => "rw");
 
 unless ($dbh) {
   push @ErrorStack,$Msg_AdminNoConnect;

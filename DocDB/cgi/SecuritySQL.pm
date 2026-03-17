@@ -37,11 +37,14 @@ sub GetSecurityGroups { # Creates/fills a hash $SecurityGroups{$GroupID}{} with 
 
   push @DebugStack,"Getting all security groups";
   
-  my ($GroupID,$Name,$Description,$CanCreate,$CanAdminister,$TimeStamp);
+  #my ($GroupID,$Name,$Description,$CanCreate,$CanAdminister,$TimeStamp);
+  my ($GroupID,$Name,$Description,$CanCreate,$CanAdminister,$TimeStamp,$LdapGroupReference);
   my $GroupList  = $dbh -> prepare(
-     "select GroupID,Name,Description,CanCreate,CanAdminister,CanView,CanConfig,TimeStamp from SecurityGroup"); 
+     #"select GroupID,Name,Description,CanCreate,CanAdminister,CanView,CanConfig,TimeStamp from SecurityGroup"); 
+     "select GroupID,Name,Description,CanCreate,CanAdminister,CanView,CanConfig,TimeStamp,ldap_group_reference from SecurityGroup"); 
   $GroupList -> execute;
-  $GroupList -> bind_columns(undef, \($GroupID,$Name,$Description,$CanCreate,$CanAdminister,$CanView,$CanConfig,$TimeStamp));
+  #$GroupList -> bind_columns(undef, \($GroupID,$Name,$Description,$CanCreate,$CanAdminister,$CanView,$CanConfig,$TimeStamp));
+  $GroupList -> bind_columns(undef, \($GroupID,$Name,$Description,$CanCreate,$CanAdminister,$CanView,$CanConfig,$TimeStamp,$LdapGroupReference));
   %SecurityGroups = ();
   while ($GroupList -> fetch) {
     $SecurityGroups{$GroupID}{NAME}          = $Name;
@@ -51,6 +54,7 @@ sub GetSecurityGroups { # Creates/fills a hash $SecurityGroups{$GroupID}{} with 
     $SecurityGroups{$GroupID}{CanCreate}     = $CanCreate;
     $SecurityGroups{$GroupID}{CanView}       = $CanView;
     $SecurityGroups{$GroupID}{TimeStamp}     = $TimeStamp;
+    $SecurityGroups{$GroupID}{LDAP_GROUP_REFERENCE}          = $LdapGroupReference;
     $SecurityIDs{$Name} = $GroupID;
   }
   
@@ -71,16 +75,19 @@ sub GetSecurityGroups { # Creates/fills a hash $SecurityGroups{$GroupID}{} with 
 
 sub FetchSecurityGroup ($) {
   my ($GroupID) = @_;
-  my ($Name,$Description,$CanCreate,$CanAdminister,$TimeStamp);
+  #my ($Name,$Description,$CanCreate,$CanAdminister,$TimeStamp);
+  my ($Name,$Description,$CanCreate,$CanAdminister,$TimeStamp,$LdapGroupReference);
   my $GroupList  = $dbh -> prepare(
-     "select Name,Description,CanCreate,CanAdminister,CanView,CanConfig,TimeStamp from SecurityGroup where GroupID=?"); 
-  
+     #"select Name,Description,CanCreate,CanAdminister,CanView,CanConfig,TimeStamp from SecurityGroup where GroupID=?"); 
+     "select Name,Description,CanCreate,CanAdminister,CanView,CanConfig,TimeStamp,ldap_group_reference from SecurityGroup where GroupID=?"); 
+
   if ($SecurityGroups{$GroupID}{TimeStamp}) { 
     return;
   }
     
   $GroupList -> execute($GroupID);
-  $GroupList -> bind_columns(undef, \($Name,$Description,$CanCreate,$CanAdminister,$CanView,$CanConfig,$TimeStamp));
+  #$GroupList -> bind_columns(undef, \($Name,$Description,$CanCreate,$CanAdminister,$CanView,$CanConfig,$TimeStamp));
+  $GroupList -> bind_columns(undef, \($Name,$Description,$CanCreate,$CanAdminister,$CanView,$CanConfig,$TimeStamp,$LdapGroupReference));
   while ($GroupList -> fetch) {
     $SecurityGroups{$GroupID}{NAME}          = $Name;
     $SecurityGroups{$GroupID}{Description}   = $Description;
@@ -89,6 +96,7 @@ sub FetchSecurityGroup ($) {
     $SecurityGroups{$GroupID}{CanCreate}     = $CanCreate;
     $SecurityGroups{$GroupID}{CanView}       = $CanView;
     $SecurityGroups{$GroupID}{TimeStamp}     = $TimeStamp;
+    $SecurityGroups{$GroupID}{LDAP_GROUP_REFERENCE}          = $LdapGroupReference;
     $SecurityIDs{$Name} = $GroupID;
   }
   
@@ -263,6 +271,44 @@ sub InsertSecurity (%) {
   }  
       
   return $Count;
+}
+
+sub FetchSecurityGroupsByUsername ($) {
+  my ($Username) = @_;
+
+  my @UserGroupIDs = ();
+  my $GroupID;
+
+#  if ($SecurityIDs{$Username}) {
+#    return $SecurityIDs{$Username};
+#  }
+
+  my $GroupSelect = $dbh->prepare("select GroupID from UsersGroup inner join EmailUser on EmailUser.EmailUserId = UsersGroup.EmailUserId where EmailUser.username like lower(?)");
+
+  $GroupSelect -> execute($Username);
+
+  $GroupSelect  -> bind_columns(undef, \($GroupID));
+  while ($GroupSelect -> fetch) {
+    push @UserGroupIDs,$GroupID;
+  }
+  return @UserGroupIDs;
+
+}
+
+sub FetchEmailUserIDByUsername ($) {
+  require "Utilities.pm";
+
+  my ($Username) = @_;
+
+  my $EmailUserID;
+
+  my $UserSelect = $dbh->prepare("select EmailUserId from EmailUser where lower(username) like lower(?)");
+
+  $UserSelect  -> execute($Username);
+
+
+  my ($EmailUserID) = $UserSelect -> fetchrow_array;
+  return $EmailUserID;
 }
 
 1;

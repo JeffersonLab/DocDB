@@ -67,7 +67,8 @@ my $UserSign      = ($Untaint -> extract(-as_printable => "usersign")    eq "on"
 my $VerifyUser    = ($Untaint -> extract(-as_printable => "verifyuser")  eq "on");
 my @UsersGroupIDs = @{ $Untaint -> extract(-as_listofint => "usergroups") || undef };
 
-$dbh   = DBI->connect('DBI:mysql:'.$db_name.':'.$db_host,$Username,$Password);
+#$dbh   = DBI->connect('DBI:mysql:'.$db_name.':'.$db_host,$Username,$Password);
+CreateConnection(-type => "rw");
 
 unless ($dbh) {
   push @ErrorStack,$Msg_AdminNoConnect;

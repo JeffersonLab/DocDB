@@ -41,6 +41,7 @@ sub AdministerActions (%) {
 };
 
 sub AdministratorPassword {
+  return; # we dont support an admin password
   my ($ArgRef) = @_;
   my $Layout = exists $ArgRef->{-layout} ? $ArgRef->{-layout} : "horizontal";
 

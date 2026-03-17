@@ -70,11 +70,13 @@ if ($Action && (!$Password || !$Username)) {
 }
 EndPage(-startpage => $TRUE);
 
-if ($Action || $Password || $Username) {
-  CreateConnection(-user => $Username, -password => $Password);
-} else {
-  CreateConnection(-type => "ro");
-}
+#if ($Action || $Password || $Username) {
+#  CreateConnection(-user => $Username, -password => $Password);
+#} else {
+#  CreateConnection(-type => "ro");
+#}
+CreateConnection(-type => "rw");
+
 EndPage(-startpage => $TRUE);
 
 print $query -> header( -charset => $HTTP_ENCODING );

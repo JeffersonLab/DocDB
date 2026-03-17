@@ -296,7 +296,8 @@ sub FindUsersGroups (;%) {
   } elsif ($UserValidation eq "basic-user") {
     # Coming (maybe)
   } else {
-    @UsersGroupIDs = (&FetchSecurityGroupByName ($remote_user));
+    #@UsersGroupIDs = (&FetchSecurityGroupByName ($remote_user));
+    @UsersGroupIDs = (&FetchSecurityGroupsByUsername ($remote_user));
   }
 
   push @DebugStack,"Before limiting, user belongs to groups ".join ', ',@UsersGroupIDs;

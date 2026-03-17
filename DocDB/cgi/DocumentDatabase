@@ -64,12 +64,14 @@ push @Scripts,"JQueryReady";
 
 print $query->header( -charset => $HTTP_ENCODING );
 if ($UserValidation eq "certificate" && $CertificateStatus ne "verified") {
-  DocDBHeader("$Project Document Database","Document Database", -scripts => ["PopUps"], -refresh => "5;url=$CertificateApplyForm");
+  #DocDBHeader("$Project Document Database","Document Database", -scripts => ["PopUps"], -refresh => "5;url=$CertificateApplyForm");
+  DocDBHeader("$Project Document Database","$Project Document Database", -scripts => ["PopUps"], -refresh => "5;url=$CertificateApplyForm");
 } else {
-  DocDBHeader("$Project Document Database","Document Database", -scripts => \@Scripts, -jqueryelements => \@JQueryElements);
+  #DocDBHeader("$Project Document Database","Document Database", -scripts => \@Scripts, -jqueryelements => \@JQueryElements);
+  DocDBHeader("$Project Document Database","$Project Document Database", -scripts => \@Scripts, -jqueryelements => \@JQueryElements);
 }
 
-my $PersonalAccountLink = PersonalAccountLink();
+#my $PersonalAccountLink = PersonalAccountLink();
 
 print "<div id=\"DocDBHomeBody\">\n";
 
@@ -204,7 +206,8 @@ if ($UserValidation eq "certificate" || $UserValidation eq "shibboleth" ||
     ( $Public && $Preferences{Options}{DynamicFullList}{Public})) {
   push @OtherColumns,"<a href=\"$ListBy?alldocs=1\">All documents</a>";
 } else {
-  push @OtherColumns,"<a href=\"$web_root/Static/Lists/$remote_user/FullList.html\">All documents</a>";
+  #push @OtherColumns,"<a href=\"$web_root/Static/Lists/$remote_user/FullList.html\">All documents</a>";
+  push @OtherColumns,"<a href=\"$web_root/Static/Lists/FullList.html\">All documents</a>";
 }
 
 push @OtherColumns,@{ $ProjectMessages{Homepage}{DocumentLists} };

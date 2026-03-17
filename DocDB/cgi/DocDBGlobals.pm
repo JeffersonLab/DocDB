@@ -106,8 +106,10 @@ $Preferences{Security}{Instances}{Certificate} = "";
 $Preferences{Security}{Instances}{Shibboleth}  = "";
 $Preferences{Security}{Instances}{FNALSSO}     = "";
 
-$Preferences{Options}{DynamicFullList}{Private} = $FALSE; # Generate Full document list by dynamically for private db
-$Preferences{Options}{DynamicFullList}{Public}  = $FALSE; # Generate Full document list by dynamically for public db
+#$Preferences{Options}{DynamicFullList}{Private} = $FALSE; # Generate Full document list by dynamically for private db
+#$Preferences{Options}{DynamicFullList}{Public}  = $FALSE; # Generate Full document list by dynamically for public db
+$Preferences{Options}{DynamicFullList}{Private} = $TRUE;
+$Preferences{Options}{DynamicFullList}{Public}  = $TRUE;
 
 $Preferences{Options}{AlwaysRetrieveFile}       = $FALSE; # Always use RetrieveFile instead of File Links
 $Preferences{Options}{MaxArchiveSize} = 4096;  # Maximum size of input files that will be archived (in MB)
@@ -128,7 +130,8 @@ $Preferences{Topics}{MinLevel}{Document} = 1;
 $Preferences{Topics}{Selector}           = "tree";   # tree, multi, or single
 $Preferences{Topics}{NColumns}           = 3;        # number of columns in the topic table
 $Preferences{Authors}{Selector}          = "active"; # active, list, or field
-$Preferences{Events}{MaxSessionList}     = 5;
+#$Preferences{Events}{MaxSessionList}     = 5;
+$Preferences{Events}{MaxSessionList}     = 1;
 
 $htaccess             = ".htaccess";
 
